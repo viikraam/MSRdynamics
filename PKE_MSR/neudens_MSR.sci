@@ -65,7 +65,7 @@ end
 
 
 // Initial values for n(t) and C_i(t).
-nt    = 1.0;
+nt    = 10.0;
 Ct(1) = (bet(1)/(L*lam(1)))*nt;
 Ct(2) = (bet(2)/(L*lam(2)))*nt;
 Ct(3) = (bet(3)/(L*lam(3)))*nt;
@@ -112,7 +112,7 @@ endfunction
 // The parameters passed to the function are 1. t=time vector, 2. y=initial values for n(t) and C_i(t), 3. react=function to retrieve reactivity values, 4. source=function to retrieve source values, 5. bet=column vector with beta values, 6. B=sum of all betas, 7. lam=column vector of lambda values, 8. L=mean neutron generation time, 9. t_L=transit time in loop, 10. t_C=transit time in core.
 funcprot(0)
 function ndot=neudens_MSR(t,y,react,rho_0,source,bet,B,lam,L,t_L,t_C)
-    ndot(1) = ((((react(t)+rho_0)-B)/L)*y(1)) + (lam(1)*y(2)) + (lam(2)*y(3)) + (lam(3)*y(4)) + (lam(4)*y(5)) + (lam(5)*y(6)) + (lam(6)*y(7)) + source(t);
+    ndot(1) = ((((rho_0+react(t))-B)/L)*y(1)) + (lam(1)*y(2)) + (lam(2)*y(3)) + (lam(3)*y(4)) + (lam(4)*y(5)) + (lam(5)*y(6)) + (lam(6)*y(7)) + source(t);
     ndot(2) = ((bet(1)/L)*y(1)) - (lam(1)*y(2)) + ((y(2)*(t-t_L)*exp(-lam(1)*t_L))/t_C) - ((y(2)*t)/t_C);
     ndot(3) = ((bet(2)/L)*y(1)) - (lam(2)*y(3)) + ((y(3)*(t-t_L)*exp(-lam(2)*t_L))/t_C) - ((y(3)*t)/t_C);
     ndot(4) = ((bet(3)/L)*y(1)) - (lam(3)*y(4)) + ((y(4)*(t-t_L)*exp(-lam(3)*t_L))/t_C) - ((y(4)*t)/t_C);
@@ -128,11 +128,12 @@ t0 = 0;
 
 
 // Time vector.
-t = 0:0.01:tmax; t = t';
+t = 0:0.1:tmax; t = t';
 
 
 // ODE solution stored in a matrix of 7 x (tmax*dt).
-sol = ode("rk4",y0,t0,t,list(neudens_MSR,react,rho_0,source,bet,B,lam,L,t_L,t_C));
+%ODEOPTIONS = [1,0,0,1,0,2,500,12,5,0,-1,-1];
+sol         = ode("rk4",y0,t0,t,list(neudens_MSR,react,rho_0,source,bet,B,lam,L,t_L,t_C));
 
 
 // Plot the solutions.
