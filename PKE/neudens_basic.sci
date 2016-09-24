@@ -129,4 +129,4 @@ xset('window',1);
 plot(t,sol(2:7,:)',"thickness",2);
 xlabel("$t$","font_size",4);
 ylabel("$C_i(t)$","font_size",4);
-legend(["$C_1$";"$C_2$";"$C_3$";"$C_4$";"$C_5$";"$C_6$"],2);
+legend(["$C_1$";"$C_2$";"$C_3$";"$C_4$";"$C_5$";"$C_6$"],5); // place legend interactively
