@@ -118,6 +118,7 @@ sol = ode("rk4",y0,t0,t,list(neudens,react,source,bet,B,lam,L));
 
 
 // Plot the solutions
+scf(); // sets the current graphics window 
 clf(); // clear the graphics window
 
 plot(t,sol(1,:)',"k-","thickness",2);
