@@ -17,7 +17,7 @@ for i=1,2,...6
 x=[""]; # initialize string array
 
 while (strcmp(x,""))
-    x=input("Select fuel. Options are U233, U235, or MSBR   ","s")
+    x=input("Select fuel. Options are U233, U235, or MSBR   ","s");
     if (strcmpi("U233",x)==1 || strcmpi("U235",x)==1 || strcmpi("MSBR",x)==1)
         break
     else
@@ -84,4 +84,7 @@ t = [0:0.1:tmax]; t = t';
 
 #vopt = odeset ("RelTol", 1e-3, "AbsTol", 1e-3, "NormControl", "on", "OutputFcn", @odeplot);
 
-sol = ode45(@neudens,[0 tmax],y0,[],[@react,@source,bet,B,lam,L]);
+sol = ode45(@neudens,[0 tmax],y0,[],[@react(t,nrows),@source(t,nrows,...
+      input_data),bet,B,lam,L]);
+
+tsol = sol.x; ysol = sol.y;

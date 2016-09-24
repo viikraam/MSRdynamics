@@ -2,7 +2,7 @@
 # Not general purpose. Only compatible with this project.
 
 
-function S=source(t)
+function S=source(t,nrows,input_data)
   S=0;
   if (t>input_data(nrows,1))
     rho=input_data(nrows,3);
