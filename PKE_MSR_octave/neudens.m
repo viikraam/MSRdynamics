@@ -11,7 +11,7 @@
 
 
 function ndot=neudens(t,y,react,source,bet,B,lam,L)
-  ndot(1) = source(t) + (((react(t)-B)/L)*y(1)) + (lam(1)*y(2)) + 
+  ndot(1) = source(t) + (((react(t)-B)/L)*y(1)) + (lam(1)*y(2)) + ...
   (lam(2)*y(3)) + (lam(3)*y(4)) + (lam(4)*y(5)) + (lam(5)*y(6)) + (lam(6)*y(7));
   ndot(2) = ((bet(1)/L)*y(1)) - (lam(1)*y(2));
   ndot(3) = ((bet(2)/L)*y(1)) - (lam(2)*y(3));

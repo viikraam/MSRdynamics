@@ -61,6 +61,27 @@ Ct(6) = (bet(6)/(L*lam(6)))*nt;
 
 # Read in input file. Formatted as time, reactivity, source.
 input_data = dlmread('./reactivity.dat');
-nrows      = rows(input_data,"r");
+nrows      = rows(input_data);
 tmax       = input_data(nrows,1); # length of time for which to evaluate the equations
 
+
+# Initial y and t values
+y0 = [nt,Ct(1),Ct(2),Ct(3),Ct(4),Ct(5),Ct(6)]';
+t0 = [0,0];
+
+
+# Time vector
+t = [0:0.1:tmax]; t = t';
+
+%function ndot=neu(t,y)
+%  ndot=zeros(2,1);
+%  V = y(1); P = y(2);
+%  ndot(1) = -13*V+(0.08*P);
+%  ndot(2) = 15*V-(0.08*P);
+%endfunction
+
+# ODE solution stored in a matrix of 7 x (tmax*dt)
+
+#vopt = odeset ("RelTol", 1e-3, "AbsTol", 1e-3, "NormControl", "on", "OutputFcn", @odeplot);
+
+sol = ode45(@neudens,[0 tmax],y0,[],[@react,@source,bet,B,lam,L]);

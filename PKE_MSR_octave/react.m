@@ -4,10 +4,10 @@
 
 function rho=react(t)
   rho=0;
-  if (t>input_data(nrows,1))
-    rho=input_data(nrows,2);
+  if (t>input_data(14,1))
+    rho=input_data(14,2);
   else
-    for i = 1:nrows-1
+    for i = 1:14-1
       if (t>=input_data(i,1) & t<=input_data(i+1,1))
         rho=input_data(i,2);
         break
