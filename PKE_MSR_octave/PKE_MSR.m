@@ -129,22 +129,29 @@ function S=source(t)
 endfunction
 
 
-function ndot=neudens(t,y,react,rho_0,source,bet,B,lam,L)
+function ndot=neudens(t,y,yd,react,rho_0,source,bet,B,lam,L,t_L,t_C)
   ndot(1) = source(t) + ((((rho_0+react(t))-B)/L)*y(1)) + (lam(1)*y(2)) + ...
   (lam(2)*y(3)) + (lam(3)*y(4)) + (lam(4)*y(5)) + (lam(5)*y(6)) + (lam(6)*y(7));
-  ndot(2) = ((bet(1)/L)*y(1)) - (lam(1)*y(2));
-  ndot(3) = ((bet(2)/L)*y(1)) - (lam(2)*y(3));
-  ndot(4) = ((bet(3)/L)*y(1)) - (lam(3)*y(4));
-  ndot(5) = ((bet(4)/L)*y(1)) - (lam(4)*y(5));
-  ndot(6) = ((bet(5)/L)*y(1)) - (lam(5)*y(6));
-  ndot(7) = ((bet(6)/L)*y(1)) - (lam(6)*y(7));
+  ndot(2) = ((bet(1)/L)*y(1)) - (lam(1)*y(2)) + (yd(2)*exp(-lam(1)*t_L)/t_C) - ...
+             (y(2)/t_C);
+  ndot(3) = ((bet(2)/L)*y(1)) - (lam(2)*y(3)) + (yd(3)*exp(-lam(2)*t_L)/t_C) - ...
+             (y(3)/t_C);
+  ndot(4) = ((bet(3)/L)*y(1)) - (lam(3)*y(4)) + (yd(4)*exp(-lam(3)*t_L)/t_C) - ...
+             (y(4)/t_C);
+  ndot(5) = ((bet(4)/L)*y(1)) - (lam(4)*y(5)) + (yd(5)*exp(-lam(4)*t_L)/t_C) - ...
+             (y(5)/t_C);
+  ndot(6) = ((bet(5)/L)*y(1)) - (lam(5)*y(6)) + (yd(6)*exp(-lam(5)*t_L)/t_C) - ...
+             (y(6)/t_C);
+  ndot(7) = ((bet(6)/L)*y(1)) - (lam(6)*y(7)) + (yd(7)*exp(-lam(6)*t_L)/t_C) - ...
+             (y(7)/t_C);
 endfunction
 
+
 # ODE solution stored in a matrix of 7 x (tmax*dt)
+vopt = odeset ("RelTol", 1e-5, "AbsTol", 1e-5, "NormControl","on", "InitialStep"...
+               ,1e-4, "MaxStep",0.01);%, "OutputFcn", @odeplot);
 
-vopt = odeset ("RelTol", 1e-5, "AbsTol", 1e-5, "NormControl","on", "InitialStep",1e-3, "MaxStep",0.1);%, "OutputFcn", @odeplot);
-
-sol = odebda(@(t,y) neudens(t,y,@react,rho_0,@source,bet,B,lam,L),[0 tmax],y0,vopt);
+sol = ode45d(@(t,y,yd) neudens(t,y,yd,@react,rho_0,@source,bet,B,lam,L,t_L,t_C),[0 tmax],y0,t_L,y0,vopt);
 
 tsol = sol.x; ysol = sol.y;
 
