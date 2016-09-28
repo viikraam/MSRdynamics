@@ -87,8 +87,8 @@ global tmax       = input_data(nrows,1); # length of time for which to evaluate 
 
 
 # Initial y and t values
-y0 = [nt,Ct(1),Ct(2),Ct(3),Ct(4),Ct(5),Ct(6)]';
-t0 = [0,0];
+global y0 = [nt,Ct(1),Ct(2),Ct(3),Ct(4),Ct(5),Ct(6)]';
+global t0 = 0;
 
 # Get reactivity value from input file for some t. 
 function rho=react(t)
@@ -128,6 +128,25 @@ function S=source(t)
   endif
 endfunction
 
+function hist = ory(t)
+  global tmax;
+  global t_L;
+  global sol;
+  global y0;
+  if (t<t_L)
+    hist = y0;
+  else
+    for i = 1:tmax-1
+      if (t>sol.x(i,1) & t<sol.x(i+1,1))
+        hist = [sol.y(i,1) sol.y(i,2) sol.y(i,3) sol.y(i,4) sol.y(i,5) sol.y(i,6) sol.y(i,7)];
+        break
+        else
+          continue
+      endif
+    endfor
+  endif
+endfunction
+
 
 function ndot=neudens(t,y,yd,react,rho_0,source,bet,B,lam,L,t_L,t_C)
   ndot(1) = source(t) + ((((rho_0+react(t))-B)/L)*y(1)) + (lam(1)*y(2)) + ...
@@ -149,9 +168,9 @@ endfunction
 
 # ODE solution stored in a matrix of 7 x (tmax*dt)
 vopt = odeset ("RelTol", 1e-5, "AbsTol", 1e-5, "NormControl","on", "InitialStep"...
-               ,1e-4, "MaxStep",0.01);%, "OutputFcn", @odeplot);
+               ,1e-3, "MaxStep",0.1);#,"OutputFcn", @odeplot);
 
-sol = ode45d(@(t,y,yd) neudens(t,y,yd,@react,rho_0,@source,bet,B,lam,L,t_L,t_C),[0 tmax],y0,t_L,y0,vopt);
+global sol = ode45d(@(t,y,yd) neudens(t,y,yd,@react,rho_0,@source,bet,B,lam,L,t_L,t_C),[0 tmax],y0,t_L,@ory,vopt);
 
 tsol = sol.x; ysol = sol.y;
 
