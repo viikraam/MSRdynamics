@@ -43,7 +43,6 @@ global L = 0.00033;
 # Transit time of fuel in external loop and core respectively.
 global t_L = 5.85;
 global t_C = 3.28;
-#global lag = [0, t_L, t_L, t_L, t_L, t_L, t_L]';
 
 
 # Calculate the big term from rho_0 equation.
@@ -55,7 +54,7 @@ function rho_0=bigterm(bet,lam,L,t_L,t_C)
     global t_L;
     global t_C;
     for i = 1:6
-        rho_0 += (bet(i)/(1 + ((1/(lam(i)*t_C))*(1-(exp(-lam(i)*t_L))))));
+        rho_0 += bet(i)/(1.0 + (1.0-exp(-lam(i)*t_L))/(lam(i)*t_C));
     end
 endfunction
 
@@ -63,28 +62,28 @@ endfunction
 # Delayed neutron lifetimes 'beta' for the six precursor groups depending on 
 # fuel type. B = sum(bet). Retrieved from ORNL-MSR-67-102.
 if (strcmpi("U233",x)==1)
-  global bet = [0.00023,0.00079,0.00067,0.00073,0.00013,0.00009]';
-  global B   = sum(bet);
+  global bet   = [0.00023,0.00079,0.00067,0.00073,0.00013,0.00009]';
+  global B     = sum(bet);
   global rho_0 = B - bigterm(bet,lam,L,t_L,t_C); 
   elseif (strcmpi("U235",x)==1)
-    global bet = [0.000215,0.00142,0.00127,0.00257,0.00075,0.00027]';
-    global B   = sum(bet);
+    global bet   = [0.000215,0.00142,0.00127,0.00257,0.00075,0.00027]';
+    global B     = sum(bet);
     global rho_0 = B - bigterm(bet,lam,L,t_L,t_C);
       elseif (strcmpi("MSBR",x)==1)
-        global bet = [0.000229,0.000832,0.000710,0.000852,0.000171,0.000102]';
-        global B   = sum(bet);
+        global bet   = [0.000229,0.000832,0.000710,0.000852,0.000171,0.000102]';
+        global B     = sum(bet);
         global rho_0 = B - bigterm(bet,lam,L,t_L,t_C);
 endif
 
 
 # Initial values for n(t) and C_i(t).
 nt    = 1.0;
-Ct(1) = ((bet(1)*nt)/L)*(1/(lam(1) - (exp(-lam(1)*t_L) - 1)/t_C));
-Ct(2) = ((bet(2)*nt)/L)*(1/(lam(2) - (exp(-lam(2)*t_L) - 1)/t_C));
-Ct(3) = ((bet(3)*nt)/L)*(1/(lam(3) - (exp(-lam(3)*t_L) - 1)/t_C));
-Ct(4) = ((bet(4)*nt)/L)*(1/(lam(4) - (exp(-lam(4)*t_L) - 1)/t_C));
-Ct(5) = ((bet(5)*nt)/L)*(1/(lam(5) - (exp(-lam(5)*t_L) - 1)/t_C));
-Ct(6) = ((bet(6)*nt)/L)*(1/(lam(6) - (exp(-lam(6)*t_L) - 1)/t_C));
+Ct(1) = ((bet(1)*nt)/L)*(1.0/(lam(1) - (exp(-lam(1)*t_L) - 1.0)/t_C));
+Ct(2) = ((bet(2)*nt)/L)*(1.0/(lam(2) - (exp(-lam(2)*t_L) - 1.0)/t_C));
+Ct(3) = ((bet(3)*nt)/L)*(1.0/(lam(3) - (exp(-lam(3)*t_L) - 1.0)/t_C));
+Ct(4) = ((bet(4)*nt)/L)*(1.0/(lam(4) - (exp(-lam(4)*t_L) - 1.0)/t_C));
+Ct(5) = ((bet(5)*nt)/L)*(1.0/(lam(5) - (exp(-lam(5)*t_L) - 1.0)/t_C));
+Ct(6) = ((bet(6)*nt)/L)*(1.0/(lam(6) - (exp(-lam(6)*t_L) - 1.0)/t_C));
 
 
 # Read in input file. Formatted as time, reactivity, source.
@@ -95,7 +94,7 @@ global tmax       = input_data(nrows,1); # length of time to evaluate equations.
 
 # Initial y and t values
 global y0 = [nt,Ct(1),Ct(2),Ct(3),Ct(4),Ct(5),Ct(6)]';
-global t0 = 0;
+global t0 = -30; # we start at -30s to avoid small fluctuations at the beginning.
 
 
 # Get reactivity value from input file for some t. 
@@ -137,6 +136,7 @@ function S=source(t)
   endif
 endfunction
 
+
 # Function to calculate the n(t) and C_i(t) as a function of time.
 # The parameters passed to the function are:
 # 1. t=time step, 2. y=initial values for n(t) and C_i(t), 
@@ -165,7 +165,7 @@ endfunction
 
 
 # Options for the DDE solver. Passed to as struct to [opt], see below.
-vopt = odeset ("RelTol", 1e-5, "AbsTol", 1e-5, "NormControl", "on", ...
+vopt = odeset ("RelTol", 1e-7, "AbsTol", 1e-7, "NormControl", "on", ...
                "InitialStep", 1e-4, "MaxStep", 0.01);#,"OutputFcn", @odeplot);
 
 
@@ -180,7 +180,7 @@ vopt = odeset ("RelTol", 1e-5, "AbsTol", 1e-5, "NormControl", "on", ...
 # Ref: http://octave.sourceforge.net/odepkg/function/odepkg_examples_dde.html
 # http://www.runet.edu/~thompson/webddes/tutorial.pdf
 sol = ode45d(@(t,y,yd) neudens(t,y,yd,@react,rho_0,@source,bet,B,lam, ...
-             L,t_L,t_C), [0 tmax], y0, t_L, y0, vopt);
+             L,t_L,t_C), [t0 tmax], y0, t_L, y0, vopt);
 
 
 # Saving the solution for t and y, where y1 is n(t) and y2:y7 are C_i(t).            
@@ -194,6 +194,7 @@ figure(1);
 F1 = plot(tsol,ysol(:,1));
 X1 = xlabel('time (in s)');
 set(X1,'FontName','Times New Roman','fontsize',14);
+axis([0,tmax]);
 Y1 = ylabel('Reactor Power (rel.)');
 set(Y1,'FontName','Times New Roman','fontsize',14);
 
@@ -203,6 +204,7 @@ figure(2)
 F2 = plot(tsol,ysol(:,2:7));
 X2 = xlabel('time (in s)');
 set(X2,'FontName','Times New Roman','fontsize',14);
+axis([0,tmax]);
 Y2 = ylabel('C_i(t)');
 set(Y2,'FontName','Times New Roman','fontsize',14);
 legend('C_1','C_2','C_3','C_4','C_5','C_6');
