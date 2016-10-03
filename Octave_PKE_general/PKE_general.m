@@ -13,6 +13,9 @@ for i=1,2,...6
 #}
 ################################################################################
 
+clear all;        # clear workspace.
+pkg load odepkg;  # load odepkg.
+
 # Ask for user unput on fuel type. Options: U233, U235 or MSBR; case insensitive.
 x=[""]; # initialize string array
 
@@ -67,13 +70,13 @@ global tmax       = input_data(nrows,1); # length of time for which to evaluate 
 
 # Initial y and t values
 y0 = [nt,Ct(1),Ct(2),Ct(3),Ct(4),Ct(5),Ct(6)]';
-t0 = [0,0];
+t0 = 0;
 
 # Get reactivity value from input file for some t. 
 # Not general purpose. Only compatible with this project.
 
 
-function rho=react(t)%,nrows,input_data)
+function rho=react(t)
   rho=0;
   global nrows;
   global input_data;
@@ -92,7 +95,7 @@ function rho=react(t)%,nrows,input_data)
 endfunction
 
 
-function S=source(t)%,nrows,input_data)
+function S=source(t)
   S=0;
   global nrows;
   global input_data;
@@ -125,14 +128,30 @@ endfunction
 
 # ODE solution stored in a matrix of 7 x (tmax*dt)
 
-vopt = odeset ("RelTol", 1e-3, "AbsTol", 1e-3, "NormControl","on", "InitialStep",0.0001, "MaxStep",0.01);%, "OutputFcn", @odeplot);
+vopt = odeset ("RelTol", 1e-5, "AbsTol", 1e-5, "NormControl","on", "InitialStep",0.0001, "MaxStep",0.01);%, "OutputFcn", @odeplot);
 
-sol = odebda(@(t,y) neudens(t,y,@react,@source,bet,B,lam,L),[0 tmax],y0,vopt);
+sol = ode45(@(t,y) neudens(t,y,@react,@source,bet,B,lam,L),[t0 tmax],y0,vopt);
 
 tsol = sol.x; ysol = sol.y;
 
-figure(1)
-plot(tsol,ysol(:,1));
 
+# Plot figure 1, n(t) vs t.
+clf('reset');
+figure(1);
+F1 = plot(tsol,ysol(:,1));
+X1 = xlabel('time (in s)');
+set(X1,'FontName','Times New Roman','fontsize',14);
+axis([t0,tmax]);
+Y1 = ylabel('Reactor Power (rel.)');
+set(Y1,'FontName','Times New Roman','fontsize',14);
+
+
+# Plot figure 2, C_i(t) vs t. 
 figure(2)
-plot(tsol,ysol(:,2:7))
+F2 = plot(tsol,ysol(:,2:7));
+X2 = xlabel('time (in s)');
+set(X2,'FontName','Times New Roman','fontsize',14);
+axis([t0,tmax]);
+Y2 = ylabel('C_i(t)');
+set(Y2,'FontName','Times New Roman','fontsize',14);
+legend('C_1','C_2','C_3','C_4','C_5','C_6');
