@@ -83,22 +83,7 @@ y0 = [nt,Ct(1),Ct(2),Ct(3),Ct(4),Ct(5),Ct(6)]';
 t0 = 0; % we start at -30s to avoid small fluctuations at the beginning.
 
  
-% Options for the DDE solver. Passed to as struct to [opt], see below.
-% vopt = odeset ('RelTol', 1e-7, 'AbsTol', 1e-7, 'NormControl', 'on', ...
-%                'InitialStep', 1e-4, 'MaxStep', 0.01);%,'OutputFcn', @odeplot);
-
-
-% Integrate ODEs for given time using the ode45d (mod RK 4,5) routine in odepkg. 
-% Used under the GNU GPL for research purposes.  
-% Function definition as follows:
-% [sol] = ode45d (@function, timeslot, initial values, timelags, history, [opt]) 
-% The timelags are passed to the solver as a vector. History is passed as an 
-% mxn matrix where X_i,j is the history of the ith component at the jth lag. 
-% For our case there's only one lag, t_L, and the history vector is a 7x1 column
-% vector equivalent to the initial condition. 
-% Ref: http://octave.sourceforge.net/odepkg/function/odepkg_examples_dde.html
-% http://www.runet.edu/~thompson/webddes/tutorial.pdf
-sol = dde23(@(t,y,Z) neudens(t,y,Z,@react,rho_0,@source,bet,B,lam,L,t_L,t_C)', t_L, y0, [t0 tmax]);
+sol = dde23(@(t,y,Z) neudens(t,y,Z,@react,rho_0,@source,bet,B,lam,L,t_L,t_C)', [t_L,t_L,t_L,t_L,t_L,t_L,t_L], y0, [t0 tmax]);
 
 
 % % Saving the solution for t and y, where y1 is n(t) and y2:y7 are C_i(t).            
