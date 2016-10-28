@@ -57,6 +57,22 @@ y0    = [nt;Ct]'; // Initial conditions
 
 // CORE HEAT TRANSFER PARAMETERS
 
+
+// Feedback co-efficients
+a_f   = -8.172E-05; // fuel temperature feedback coefficient in drho/°C
+a_g   =  2.016E-05; // graphite temperature feedback coefficient in drho/°C
+a_b   =  1.656E-05; // fertile temperature feedback coefficient in drho/°C
+
+
+// Initial conditions
+T0_f1  = 579.44; // in °C
+T0_f2  = 621.11; // in °C
+T0_f3  = 662.77; // in °C
+T0_f4  = 704.44; // in °C
+
+T0_b1  = 648.88; // in °C
+T0_b2  = 676.66; // in °C
+
 // Core Upflow
 mcp_g1   = 1.403E+01; // (mass of material x heat capacity of material) of graphite per lump in MW-s/°C
 mcp_f1   = 2.748E-01; // (mass of material x heat capacity of material) of fuel salt per lump in MW-s/°C
@@ -70,6 +86,7 @@ k_f2     = 2.210E-01; // fraction of total power generated in lump f2
 tau_1    = 8.400E-01; // residence time in lump f1
 tau_2    = 8.400E-01; // residence time in lump f2
 
+
 // Core downflow
 mcp_g2   = 1.403E+01; // (mass of material x heat capacity of material) of graphite per lump in MW-s/°C
 mcp_f3   = 2.748E-01; // (mass of material x heat capacity of material) of fuel salt per lump in MW-s/°C
@@ -82,6 +99,7 @@ k_f3     = 2.210E-01; // fraction of total power generated in lump f3
 k_f4     = 2.210E-01; // fraction of total power generated in lump f4
 tau_3    = 8.400E-01; // residence time in lump f3
 tau_4    = 8.400E-01; // residence time in lump f4
+
 
 // Fertile stream
 mcp_g3   = 3.485E+00; // (mass of material x heat capacity of material x fraction tranferring heat to                           // fertile stream)in MW-s/°C
@@ -99,3 +117,34 @@ tau_b2   = 7.000E+00; // residence time in lump b2
 T_in = 1.0; // placeholder
 T_b_in = 1.0; // placeholder
 P = 1.0; // placeholder
+
+
+// PRIMARY HEAT EXCHANGER
+
+mcp_p1   = 3.452E+00;
+mcp_p2   = 3.452E+00;
+mcp_p3   = 3.452E+00;
+mcp_p4   = 3.452E+00;
+mcp_t1   = 2.160E+00;
+mcp_t2   = 2.160E+00;
+mcp_s1   = 6.750E+00;
+mcp_s2   = 6.750E+00;
+mcp_s3   = 6.750E+00;
+mcp_s4   = 6.750E+00;
+hA_p1    = 2.970E+00;
+hA_p2    = 2.970E+00;
+hA_p3    = 2.970E+00;
+hA_p4    = 2.970E+00;
+hA_s1    = 5.940E+00;
+hA_s2    = 5.940E+00;
+hA_s3    = 5.940E+00;
+hA_s4    = 5.940E+00;
+tau_p1   = 5.000E-01;
+tau_p2   = 5.000E-01;
+tau_pl   = 1.000E+00;
+tau_p3   = 5.000E-01;
+tau_p4   = 5.000E-01;
+tau_s1   = 1.900E+00;
+tau_s2   = 1.900E+00;
+tau_s3   = 1.900E+00;
+tau_s4   = 1.900E+00;
