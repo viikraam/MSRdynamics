@@ -4,11 +4,11 @@ stacksize('max');
 // EXTERNAL REACTIVITY AND SOURCE INPUTS
 
 // Create the variable to load from
-R.time   = [0,50,100,150,200]'; //the values must be in a column vector
-R.values = [0,6e-4,0,-6e-4,0]';
+R.time   = [0]'; //the values must be in a column vector
+R.values = [0]';
 
-S.time   = [0,50,100,150,200]'; //the values must be in a column vector
-S.values = [0,0,0,0,0]';
+S.time   = [0]'; //the values must be in a column vector
+S.values = [0]';
 
 
 // FUEL PARAMETERS
@@ -73,11 +73,20 @@ T0_f4  = 704.44; // in °C
 T0_b1  = 648.88; // in °C
 T0_b2  = 676.66; // in °C
 
+T0_g1  = 590.00; // in °C
+T0_g2  = 673.33; // in °C
+T0_g3  = 652.77; // in °C
+
+T_in   = 537.77; // in °C
+T_b_in = 621.11; // in °C
+P      = 556.0; // Thermal Power in MW
+
+
 // Core Upflow
 mcp_g1   = 1.403E+01; // (mass of material x heat capacity of material) of graphite per lump in MW-s/°C
 mcp_f1   = 2.748E-01; // (mass of material x heat capacity of material) of fuel salt per lump in MW-s/°C
 mcp_f2   = 2.748E-01; // (mass of material x heat capacity of material) of fuel salt per lump in MW-s/°C
-hA_fg_up = 1.733E+00; // (fuel to graphite heat transfer coeff x heat transfer area) in MW/°C
+hA_fg_up = 1.732E+00; // (fuel to graphite heat transfer coeff x heat transfer area) in MW/°C
 k_g1     = 3.300E-02; // fraction of total power generated in the graphite lump
 k_1      = 5.000E-01; // fraction of heat transferred from graphite which goes to first fuel lump
 k_2      = 5.000E-01; // fraction of heat transferred from graphite which goes to second fuel lump
@@ -102,7 +111,7 @@ tau_4    = 8.400E-01; // residence time in lump f4
 
 
 // Fertile stream
-mcp_g3   = 3.485E+00; // (mass of material x heat capacity of material x fraction tranferring heat to                           // fertile stream)in MW-s/°C
+mcp_g3   = 3.467E+00; // (mass of material x heat capacity of material x fraction tranferring heat to                           // fertile stream)in MW-s/°C
 mcp_b1   = 1.733E+00; // (mass of material x heat capacity of material) of blanket salt per lump MW-s/°C
 mcp_b2   = 1.733E+00; // (mass of material x heat capacity of material) of blanket salt per lump MW-s/°C
 hA_bg    = 1.054E+00; // (salt to graphite heat transfer coeff x heat transfer area) in MW/°C
@@ -111,12 +120,8 @@ k_1b     = 5.000E-01; // fraction of heat transferred from graphite which goes t
 k_2b     = 5.000E-01; // fraction of heat transferred from graphite which goes to blanket salt lump b2
 k_b1     = 8.500E-03; // fraction of total power generated in lump b1
 k_b2     = 8.500E-03; // fraction of total power generated in lump b2
-tau_b1   = 7.000E+00; // residence time in lump b1
-tau_b2   = 7.000E+00; // residence time in lump b2
-
-T_in = 1.0; // placeholder
-T_b_in = 1.0; // placeholder
-P = 1.0; // placeholder
+tau_b1   = 6.998E+00; // residence time in lump b1
+tau_b2   = 6.998E+00; // residence time in lump b2
 
 
 // PRIMARY HEAT EXCHANGER
