@@ -1,5 +1,7 @@
-params.sci file contains structures with the time, reactivity, and source vectors. The file needs to be executed in Scilab to load the variables into the workspace for the model to use. 
+params.sci file contains all the parameters needed to run the model. The calculations are done in the file and some parameters may vary slightly from the ones given in ORNL-67-102. The file needs to be executed in Scilab to load the variables into the workspace for the model to use. 
 
-The PKE_MSR.xcos file is a model of the MSR PKE equations with transit delay terms. The constant terms are defined by running the params.sci file. 
 
 Plots are made by running the plotting.sci file. 
+
+
+The PKE_MSR_HE.xcos file is the complete working model from ORNL-67-102 of the two-fluid thorium-based Molten Salt Breeder Reactor. The model and its parameters need to be refined for more precision, but the model is accurate to first order. 

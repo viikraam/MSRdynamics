@@ -29,7 +29,8 @@ legend(["$T_{f1}$";"$T_{f2}$";"$T_{f3}$";"$T_{f4}$"],5);
 
 
 // T_b temps
-//plot(b.time,b.values(:,[21,22]));
-//xlabel("$\rm Time \ [s]$","font_size",4);
-//ylabel("$\rm C_i(t)$","font_size",4);
-//legend(["$T_{b1}$";"$T_{b2}$"],5);
+scf(5);
+plot(b.time,b.values(:,[21,22]));
+xlabel("$\rm Time \ [s]$","font_size",4);
+ylabel("$\rm Fertile \ node \ temperature \ [^{\circ} C]$","font_size",4);
+legend(["$T_{b1}$";"$T_{b2}$"],5);
